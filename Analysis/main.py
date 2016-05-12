@@ -2,11 +2,20 @@
 # -*- coding: UTF-8 -*-
 
 import logging
+import os
 import numpy as np
-from util import constants, Dataloader, FeatureUtil
+from util import constants, Dataloader, FeatureUtil, FileUtil
+from scipy.stats.stats import pearsonr
 
 
 __author__ = 'Liao Zhenyu'
+
+
+def dump_matrix(index, matrix):
+    logging.info("Dump matrix" + str(index) + " into text file...")
+    matrix_file_name = "matrix"+str(index)+".txt"
+    with open(os.path.join(FileUtil.FileUtil.get_local_dump_dir(), matrix_file_name), mode="w") as f:
+        np.savetxt(f, matrix, fmt='%.2f', newline='\n')
 
 
 def single_value_analysis(user_set):
@@ -17,6 +26,23 @@ def single_value_analysis(user_set):
         for user in user_set:
             user_index = user_set[user]
             cmatrix[user_index, day_index] = FeatureUtil.get_user_feature(user, file_path, "call_count_single")
+    matrix_index = 0
+    sim_matrix = np.zeros((user_num, user_num))
+    for day_index in [constants.WINDOW_SIZE-1, constants.TOTAL_DAY_NUM]:
+        start_index = day_index-constants.WINDOW_SIZE+1
+        logging.info("Generating matrix " + str(matrix_index) +
+                     " from day " + str(start_index + 1) +
+                     " to day " + str(day_index+1))
+        for user in user_set:
+            user_index = user_set[user]
+            user_feature_vector = cmatrix[user_index, start_index:day_index]
+            for user_comp in user_set:
+                user_comp_index = user_set[user_comp]
+                user_comp_feature_vector = cmatrix[user_comp_index, start_index:day_index]
+                sim_matrix[user_index, user_comp_index] = pearsonr(user_feature_vector, user_comp_feature_vector)
+                sim_matrix[user_comp_index, user_index] = sim_matrix[user_index, user_comp_index]
+        dump_matrix(matrix_index, sim_matrix)
+        matrix_index += 1
 
 
 def detail_value_analysis(user_set):
@@ -26,3 +52,4 @@ def detail_value_analysis(user_set):
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    pass

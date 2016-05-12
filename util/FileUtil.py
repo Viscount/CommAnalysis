@@ -52,8 +52,15 @@ class FileUtil(object):
         FileUtil.create_dir_if_not_exist(local_data_path)
         return local_data_path
 
-        # 分块读取文件的内容。
+    # 获得本地数据目录。
+    @staticmethod
+    def get_local_dump_dir():
+        base_path = FileUtil.get_project_root_path()
+        local_dump_path = os.path.join(base_path, "dump")
+        FileUtil.create_dir_if_not_exist(local_dump_path)
+        return local_dump_path
 
+    # 分块读取文件的内容。
     @staticmethod
     def __read_file_by_block(input_file, buffer_size=65536):
         while True:
