@@ -55,10 +55,14 @@ def get_data_file_path():
 
 
 def get_part_data_file_prefix(index):
-    return os.path.join(file_util.FileUtil.get_local_data_dir(), constants.DATA_PART_FILE_NAME_PREFIX + index + ".txt")
+    if index < 10:
+        index_str = "0" + str(index)
+    else:
+        index_str = str(index)
+    return os.path.join(file_util.FileUtil.get_local_data_dir(), constants.DATA_PART_FILE_NAME_PREFIX + index_str + ".txt")
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # file_split(get_data_file_path())
-    records = read_record_from_file(get_part_data_file_prefix("20120201"))
+    records = read_record_from_file(get_part_data_file_prefix(1))
     print len(records)
