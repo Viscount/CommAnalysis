@@ -3,6 +3,7 @@
 
 from util import Dataloader
 import logging
+import random
 
 __author__ = 'Liao Zhenyu'
 
@@ -66,6 +67,23 @@ def extract_all_records(file_path):
     return Dataloader.read_record_from_file(file_path)
 
 
+def extract_user_selective(user_dict, num_of_select):
+    # all_user_set = set(user_dict.keys())
+    if num_of_select >= len(user_dict):
+        return user_dict
+    elif num_of_select <= 0:
+        empty_set = set()
+        return empty_set
+    else:
+        selected = random.sample(user_dict, num_of_select)
+        selective_user_dict = dict()
+        user_count = 0
+        for user in selected:
+            selective_user_dict[user] = user_count
+            user_count += 1
+        return selective_user_dict
+
+
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # file_path = Dataloader.get_part_data_file_prefix("20120201")
@@ -74,6 +92,18 @@ if __name__ == "__main__":
     # test_key = callingDay1.keys()[2]
     # records = extract_user_records(test_key, file_path)
     # print len(records)
-    calling_dict = extract_common_users()
-    print len(calling_dict)
+
+    # calling_dict = extract_common_users()
+    # print len(calling_dict)
+
+    test_user_set = dict()
+    test_user_set["abcd"] = 1
+    test_user_set["dcba"] = 2
+    test_user_set["cbad"] = 3
+    test_user_set["bcda"] = 4
+    selective = extract_user_selective(test_user_set, 2)
+    print len(selective)
+
+
+
 

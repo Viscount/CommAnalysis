@@ -54,11 +54,13 @@ def detail_value_analysis(user_set):
     user_num = len(user_set)
     for day_index in range(constants.TOTAL_DAY_NUM):
         logging.info("Calculate feature in day " + str(day_index + 1))
-        file
+        file_path = Dataloader.get_part_data_file_prefix(day_index + 1)
+        all_records = Dataloader.read_record_from_file(file_path)
+
 
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # single-value analysis process
-    user_set = DataUtil.extract_common_users()
+    user_set = DataUtil.extract_user_selective(DataUtil.extract_common_users(), constants.SELECTIVE_NUM)
     single_value_analysis(user_set)
