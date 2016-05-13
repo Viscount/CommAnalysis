@@ -18,7 +18,14 @@ def extract_all_users(file_path):
     return calling_user_dict
 
 
-def extract_common_users(file_path_list):
+def get_default_file_path_list():
+    file_path_list = []
+    for day_index in range(29):
+        file_path_list.append(Dataloader.get_part_data_file_prefix(day_index + 1))
+    return file_path_list
+
+
+def extract_common_users(file_path_list=get_default_file_path_list()):
     common_users = set()
     first_dict_flag = True
     for file_path in file_path_list:
@@ -38,13 +45,25 @@ def extract_common_users(file_path_list):
     return common_user_dict
 
 
-def extract_user_records(user_num, file_path):
+def extract_user_records_from_file(user_num, file_path):
     records = Dataloader.read_record_from_file(file_path)
     user_records = []
     for record in records:
         if record.calling_num == user_num:
             user_records.append(record)
     return user_records
+
+
+def extract_user_records(user_num, all_records):
+    user_records = []
+    for record in all_records:
+        if record.calling_num == user_num:
+            user_records.append(record)
+    return user_records
+
+
+def extract_all_records(file_path):
+    return Dataloader.read_record_from_file(file_path)
 
 
 if __name__ == "__main__":
@@ -55,9 +74,6 @@ if __name__ == "__main__":
     # test_key = callingDay1.keys()[2]
     # records = extract_user_records(test_key, file_path)
     # print len(records)
-    file_path_list = []
-    for day_index in range(29):
-        file_path_list.append(Dataloader.get_part_data_file_prefix(day_index+1))
-    calling_dict = extract_common_users(file_path_list)
+    calling_dict = extract_common_users()
     print len(calling_dict)
 

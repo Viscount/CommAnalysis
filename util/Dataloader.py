@@ -43,7 +43,7 @@ def file_split(file_path):
                     file.close()
                 logging.info("Generating file " + date_index)
                 current_index = date_index
-                file = open(get_part_data_file_prefix(date_index), "w")
+                file = open(get_part_data_file_prefix(date_index[6:8]), "w")
                 file.writelines(line)
             else:
                 file.writelines(line)
@@ -59,7 +59,8 @@ def get_part_data_file_prefix(index):
         index_str = "0" + str(index)
     else:
         index_str = str(index)
-    return os.path.join(file_util.FileUtil.get_local_data_dir(), constants.DATA_PART_FILE_NAME_PREFIX + index_str + ".txt")
+    return os.path.join(file_util.FileUtil.get_local_data_dir(), constants.DATA_PART_FILE_NAME_PREFIX
+                        + index_str + ".txt")
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)

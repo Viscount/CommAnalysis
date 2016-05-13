@@ -4,7 +4,7 @@
 import logging
 import os
 import numpy as np
-from util import constants, Dataloader, FeatureUtil, FileUtil
+from util import constants, Dataloader, FeatureUtil, FileUtil, DataUtil
 from scipy.stats.stats import pearsonr
 
 
@@ -19,13 +19,17 @@ def dump_matrix(index, matrix):
 
 
 def single_value_analysis(user_set):
+    logging.info("Starting Single-value analysis.")
     user_num = len(user_set)
     cmatrix = np.zeros((user_num, constants.TOTAL_DAY_NUM))
     for day_index in range(constants.TOTAL_DAY_NUM):
+        logging.info("Calculate feature in day " + str(day_index + 1))
         file_path = Dataloader.get_part_data_file_prefix(day_index+1)
+        all_records = Dataloader.read_record_from_file(file_path)
+        all_features = FeatureUtil.get_user_features(user_set, all_records, "call_count_single")
         for user in user_set:
             user_index = user_set[user]
-            cmatrix[user_index, day_index] = FeatureUtil.get_user_feature(user, file_path, "call_count_single")
+            cmatrix[user_index, day_index] = all_features[user]
     matrix_index = 0
     sim_matrix = np.zeros((user_num, user_num))
     for day_index in [constants.WINDOW_SIZE-1, constants.TOTAL_DAY_NUM]:
@@ -46,10 +50,15 @@ def single_value_analysis(user_set):
 
 
 def detail_value_analysis(user_set):
+    logging.info("Starting detail-value analysis.")
     user_num = len(user_set)
-    pass
+    for day_index in range(constants.TOTAL_DAY_NUM):
+        logging.info("Calculate feature in day " + str(day_index + 1))
+        file
 
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    pass
+    # single-value analysis process
+    user_set = DataUtil.extract_common_users()
+    single_value_analysis(user_set)
