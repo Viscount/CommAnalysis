@@ -32,7 +32,7 @@ def single_value_analysis(user_set):
             cmatrix[user_index, day_index] = all_features[user]
     # 生成相似度矩阵
     matrix_index = 0
-    for day_index in [constants.WINDOW_SIZE-1, constants.TOTAL_DAY_NUM]:
+    for day_index in range(constants.WINDOW_SIZE-1, constants.TOTAL_DAY_NUM):
         sim_matrix = np.zeros((user_num, user_num))
         start_index = day_index-constants.WINDOW_SIZE+1
         logging.info("Generating matrix " + str(matrix_index) +
@@ -44,9 +44,9 @@ def single_value_analysis(user_set):
             for user_comp in user_set:
                 user_comp_index = user_set[user_comp]
                 user_comp_feature_vector = cmatrix[user_comp_index, start_index:day_index+1]
-                sim_matrix[user_index, user_comp_index] = pearsonr(user_feature_vector.tolist(),
-                                                                   user_comp_feature_vector.tolist())
-                sim_matrix[user_comp_index, user_index] = sim_matrix[user_index, user_comp_index]
+                r, p_value = pearsonr(user_feature_vector, user_comp_feature_vector)
+                sim_matrix[user_index, user_comp_index] = r
+                sim_matrix[user_comp_index, user_index] = r
         dump_matrix(matrix_index, sim_matrix)
         matrix_index += 1
 
@@ -69,8 +69,9 @@ def detail_value_analysis(user_set):
             for user_comp in user_set:
                 user_comp_index = user_set[user_comp]
                 user_comp_feature_vector = all_features[user_comp]
-                sim_matrix[user_index, user_comp_index] = pearsonr(user_feature_vector, user_comp_feature_vector)
-                sim_matrix[user_comp_index, user_index] = sim_matrix[user_index, user_comp_index]
+                r, p_value = pearsonr(user_feature_vector, user_comp_feature_vector)
+                sim_matrix[user_index, user_comp_index] = r
+                sim_matrix[user_comp_index, user_index] = r
         dump_matrix(day_index, sim_matrix)
 
 

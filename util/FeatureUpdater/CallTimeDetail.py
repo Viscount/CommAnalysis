@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from util import constants
+import numpy as np
+
 
 __author__ = 'Liao Zhenyu'
 
@@ -31,4 +33,4 @@ class CallTimeDetail:
         for user in dict_value:
             user_feature_vector = dict_value[user].values()
             user_feature_vector.sort(reversed=True)
-        return user_feature_vector[:constants.DETAIL_VALUE_DIM]
+        return np.ndarray(user_feature_vector[:constants.DETAIL_VALUE_DIM])
