@@ -15,3 +15,7 @@ class CallCountSingle:
     @staticmethod
     def create(current_record):
         return 1
+
+    @staticmethod
+    def finish(dict_value):
+        return dict_value

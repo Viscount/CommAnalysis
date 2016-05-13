@@ -15,3 +15,7 @@ class CallTimeSingle:
     @staticmethod
     def create(current_record):
         return current_record.raw_dur
+
+    @staticmethod
+    def finish(dict_value):
+        return dict_value

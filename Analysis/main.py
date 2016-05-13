@@ -30,20 +30,22 @@ def single_value_analysis(user_set):
         for user in user_set:
             user_index = user_set[user]
             cmatrix[user_index, day_index] = all_features[user]
+    # 生成相似度矩阵
     matrix_index = 0
-    sim_matrix = np.zeros((user_num, user_num))
     for day_index in [constants.WINDOW_SIZE-1, constants.TOTAL_DAY_NUM]:
+        sim_matrix = np.zeros((user_num, user_num))
         start_index = day_index-constants.WINDOW_SIZE+1
         logging.info("Generating matrix " + str(matrix_index) +
                      " from day " + str(start_index + 1) +
                      " to day " + str(day_index+1))
         for user in user_set:
             user_index = user_set[user]
-            user_feature_vector = cmatrix[user_index, start_index:day_index]
+            user_feature_vector = cmatrix[user_index, start_index:day_index+1]
             for user_comp in user_set:
                 user_comp_index = user_set[user_comp]
-                user_comp_feature_vector = cmatrix[user_comp_index, start_index:day_index]
-                sim_matrix[user_index, user_comp_index] = pearsonr(user_feature_vector, user_comp_feature_vector)
+                user_comp_feature_vector = cmatrix[user_comp_index, start_index:day_index+1]
+                sim_matrix[user_index, user_comp_index] = pearsonr(user_feature_vector.tolist(),
+                                                                   user_comp_feature_vector.tolist())
                 sim_matrix[user_comp_index, user_index] = sim_matrix[user_index, user_comp_index]
         dump_matrix(matrix_index, sim_matrix)
         matrix_index += 1
@@ -56,7 +58,20 @@ def detail_value_analysis(user_set):
         logging.info("Calculate feature in day " + str(day_index + 1))
         file_path = Dataloader.get_part_data_file_prefix(day_index + 1)
         all_records = Dataloader.read_record_from_file(file_path)
-
+        all_features = FeatureUtil.get_user_features(user_set, all_records, "call_count_detail")
+        # 生成相似度矩阵
+        logging.info("Generating matrix " + str(day_index) +
+                     " for day " + str(day_index + 1))
+        sim_matrix = np.zeros((user_num, user_num))
+        for user in user_set:
+            user_index = user_set[user]
+            user_feature_vector = all_features[user]
+            for user_comp in user_set:
+                user_comp_index = user_set[user_comp]
+                user_comp_feature_vector = all_features[user_comp]
+                sim_matrix[user_index, user_comp_index] = pearsonr(user_feature_vector, user_comp_feature_vector)
+                sim_matrix[user_comp_index, user_index] = sim_matrix[user_index, user_comp_index]
+        dump_matrix(day_index, sim_matrix)
 
 
 if __name__ == "__main__":
@@ -64,3 +79,6 @@ if __name__ == "__main__":
     # single-value analysis process
     user_set = DataUtil.extract_user_selective(DataUtil.extract_common_users(), constants.SELECTIVE_NUM)
     single_value_analysis(user_set)
+    # detail-value analysis process
+    detail_value_analysis(user_set)
+
