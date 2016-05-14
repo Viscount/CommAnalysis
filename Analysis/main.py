@@ -3,12 +3,22 @@
 
 import logging
 import os
+import math
 import numpy as np
 from util import constants, Dataloader, FeatureUtil, FileUtil, DataUtil
 from scipy.stats.stats import pearsonr
 
 
 __author__ = 'Liao Zhenyu'
+
+
+def str_vector(vector):
+    vector_list = vector.tolist()
+    string = "["
+    for item in vector_list:
+        string = string + str(item) + ","
+    string += "]"
+    return string
 
 
 def dump_matrix(index, matrix):
@@ -45,8 +55,10 @@ def single_value_analysis(user_set):
                 user_comp_index = user_set[user_comp]
                 user_comp_feature_vector = cmatrix[user_comp_index, start_index:day_index+1]
                 r, p_value = pearsonr(user_feature_vector, user_comp_feature_vector)
-                sim_matrix[user_index, user_comp_index] = r
-                sim_matrix[user_comp_index, user_index] = r
+                if math.isnan(r):
+                    r = 0.0
+                sim_matrix[user_index, user_comp_index] = abs(r)
+                sim_matrix[user_comp_index, user_index] = abs(r)
         dump_matrix(matrix_index, sim_matrix)
         matrix_index += 1
 
@@ -70,8 +82,10 @@ def detail_value_analysis(user_set):
                 user_comp_index = user_set[user_comp]
                 user_comp_feature_vector = all_features[user_comp]
                 r, p_value = pearsonr(user_feature_vector, user_comp_feature_vector)
-                sim_matrix[user_index, user_comp_index] = r
-                sim_matrix[user_comp_index, user_index] = r
+                if math.isnan(r):
+                    r = 0.0
+                sim_matrix[user_index, user_comp_index] = abs(r)
+                sim_matrix[user_comp_index, user_index] = abs(r)
         dump_matrix(day_index, sim_matrix)
 
 

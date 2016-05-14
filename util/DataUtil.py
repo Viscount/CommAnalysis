@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from util import Dataloader
+from util import Dataloader, constants
 import logging
 import random
 
@@ -21,7 +21,7 @@ def extract_all_users(file_path):
 
 def get_default_file_path_list():
     file_path_list = []
-    for day_index in range(29):
+    for day_index in range(constants.TOTAL_DAY_NUM):
         file_path_list.append(Dataloader.get_part_data_file_prefix(day_index + 1))
     return file_path_list
 
@@ -68,13 +68,13 @@ def extract_all_records(file_path):
 
 
 def extract_user_selective(user_dict, num_of_select):
-    # all_user_set = set(user_dict.keys())
     if num_of_select >= len(user_dict):
         return user_dict
     elif num_of_select <= 0:
         empty_set = set()
         return empty_set
     else:
+        random.seed(constants.RANDOM_SEED)
         selected = random.sample(user_dict, num_of_select)
         selective_user_dict = dict()
         user_count = 0

@@ -30,7 +30,8 @@ class CallTimeDetail:
 
     @staticmethod
     def finish(dict_value):
-        for user in dict_value:
-            user_feature_vector = dict_value[user].values()
-            user_feature_vector.sort(reversed=True)
+        user_feature_vector = dict_value.values()
+        while len(user_feature_vector) < constants.DETAIL_VALUE_DIM:
+            user_feature_vector.append(0.0)
+        user_feature_vector.sort(reverse=True)
         return np.ndarray(user_feature_vector[:constants.DETAIL_VALUE_DIM])
