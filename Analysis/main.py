@@ -4,6 +4,7 @@
 import logging
 import os
 import math
+import resource
 import numpy as np
 from util import constants, Dataloader, FeatureUtil, FileUtil, DataUtil
 from scipy.stats.stats import pearsonr
@@ -40,6 +41,7 @@ def single_value_analysis(user_set):
         for user in user_set:
             user_index = user_set[user]
             cmatrix[user_index, day_index] = all_features[user]
+    dump_matrix(999, cmatrix)
     # 生成相似度矩阵
     matrix_index = 0
     for day_index in range(constants.WINDOW_SIZE-1, constants.TOTAL_DAY_NUM):
@@ -91,9 +93,10 @@ def detail_value_analysis(user_set):
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    # resource.setrlimit(resource.RLIMIT_AS, (60 * 1048576L, -1L))
     # single-value analysis process
     user_set = DataUtil.extract_user_selective(DataUtil.extract_common_users(), constants.SELECTIVE_NUM)
-    single_value_analysis(user_set)
+    # single_value_analysis(user_set)
     # detail-value analysis process
     detail_value_analysis(user_set)
 

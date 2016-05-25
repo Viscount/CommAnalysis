@@ -16,10 +16,11 @@ def get_user_features(user_dict, all_records, feature_name):
                 feature_dict[user_key] = feature_updater.update(feature_dict[user_key], record)
             else:
                 feature_dict[user_key] = feature_updater.create(record)
+    vector_dict = dict()
     for user in user_dict:
         if user in feature_dict:
-            feature_dict[user] = feature_updater.finish(feature_dict[user])
-    return feature_dict
+            vector_dict[user] = feature_updater.finish(feature_dict[user])
+    return vector_dict
 
 
 if __name__ == "__main__":

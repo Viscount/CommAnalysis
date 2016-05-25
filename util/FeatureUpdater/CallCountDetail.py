@@ -34,4 +34,4 @@ class CallCountDetail:
         while len(user_feature_vector) < constants.DETAIL_VALUE_DIM:
             user_feature_vector.append(0)
         user_feature_vector.sort(reverse=True)
-        return np.ndarray(user_feature_vector[:constants.DETAIL_VALUE_DIM])
+        return np.array(user_feature_vector[:constants.DETAIL_VALUE_DIM])
