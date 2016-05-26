@@ -23,6 +23,10 @@ def get_user_features(user_dict, all_records, feature_name):
     return vector_dict
 
 
+def combine_user_feature(feature_window):
+    pass
+
+
 if __name__ == "__main__":
     file_path = Dataloader.get_part_data_file_prefix(1)
     callingDay1 = DataUtil.extract_all_users(file_path)
