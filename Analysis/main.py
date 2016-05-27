@@ -118,7 +118,7 @@ def detail_value_analysis_aggregative(user_set):
                         r = 0.0
                     sim_matrix[user_index, user_comp_index] = abs(r)
                     sim_matrix[user_comp_index, user_index] = abs(r)
-            dump_matrix(day_index, sim_matrix)
+            dump_matrix(day_index-2, sim_matrix)
             feature_window.pop(0)
 
 

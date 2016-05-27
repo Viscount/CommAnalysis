@@ -43,12 +43,12 @@ class CallCountDetailAggregative:
                     old_feature = feature_dict[user]
                     feature_dict[user] = combine_feature_vectors(feature, old_feature)
         result_dict = dict()
-        for user, feature in feature_dict:
+        for user, feature in feature_dict.items():
             user_feature_vector = feature.values()
             while len(user_feature_vector) < constants.DETAIL_VALUE_DIM:
                 user_feature_vector.append(0.0)
             user_feature_vector.sort(reverse=True)
-            result_dict[user] = np.ndarray(user_feature_vector[:constants.DETAIL_VALUE_DIM])
+            result_dict[user] = np.array(user_feature_vector[:constants.DETAIL_VALUE_DIM])
         return result_dict
 
 
