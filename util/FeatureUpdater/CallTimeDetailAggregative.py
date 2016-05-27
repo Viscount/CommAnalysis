@@ -31,3 +31,7 @@ class CallTimeDetailAggregative:
     @staticmethod
     def finish(dict_value):
         return dict_value
+
+    @staticmethod
+    def combine(feature_window):
+        pass
