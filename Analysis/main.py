@@ -98,14 +98,14 @@ def detail_value_analysis_aggregative(user_set):
         logging.info("Calculate feature in day " + str(day_index + 1))
         file_path = Dataloader.get_part_data_file_prefix(day_index + 1)
         all_records = Dataloader.read_record_from_file(file_path)
-        all_features = FeatureUtil.get_user_features(user_set, all_records, "call_count_detail")
+        all_features = FeatureUtil.get_user_features(user_set, all_records, "call_count_detail_aggregative")
         feature_window.append(all_features)
         # 生成相似度矩阵
         if len(feature_window) == 3:
             logging.info("Generating matrix " + str(day_index-2) +
                          " from day " + str(day_index-1) +
                          " to day " + str(day_index+1))
-            all_features = FeatureUtil.combine_user_feature(feature_window)
+            all_features = FeatureUtil.combine_user_feature(feature_window, "call_count_detail_aggregative")
             sim_matrix = np.zeros((user_num, user_num))
             for user in user_set:
                 user_index = user_set[user]
@@ -128,5 +128,6 @@ if __name__ == "__main__":
     user_set = DataUtil.extract_user_selective(DataUtil.extract_common_users(), constants.SELECTIVE_NUM)
     # single_value_analysis(user_set)
     # detail-value analysis process
-    detail_value_analysis(user_set)
-
+    # detail_value_analysis(user_set)
+    # detail_value_aggregative_analysis process
+    detail_value_analysis_aggregative(user_set)

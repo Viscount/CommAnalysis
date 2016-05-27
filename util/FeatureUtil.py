@@ -23,8 +23,9 @@ def get_user_features(user_dict, all_records, feature_name):
     return vector_dict
 
 
-def combine_user_feature(feature_window):
-    pass
+def combine_user_feature(feature_window, feature_name):
+    feature_updater = FeatureUpdater.get_feature_updater(feature_name)
+    return feature_updater.combine(feature_window)
 
 
 if __name__ == "__main__":
