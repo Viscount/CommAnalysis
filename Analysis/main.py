@@ -117,7 +117,7 @@ def detail_value_analysis_aggregative(user_set):
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # single-value analysis process
-    user_set = DataUtil.extract_user_selective(DataUtil.extract_all_users(), constants.SELECTIVE_NUM)
+    user_set = DataUtil.extract_user_selective(DataUtil.extract_all_users_from_list(), constants.SELECTIVE_NUM)
     single_value_analysis(user_set)
     # detail-value analysis process
     # detail_value_analysis(user_set)

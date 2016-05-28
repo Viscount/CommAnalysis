@@ -26,6 +26,26 @@ def get_default_file_path_list():
     return file_path_list
 
 
+def extract_all_users_from_list(file_path_list=get_default_file_path_list()):
+    common_users = set()
+    first_dict_flag = True
+    for file_path in file_path_list:
+        logging.info("Loading file " + file_path + "...")
+        calling_users = extract_all_users(file_path)
+        calling_user_set = set(calling_users.keys())
+        if first_dict_flag:
+            common_users = calling_user_set.copy()
+            first_dict_flag = False
+        else:
+            common_users = common_users | calling_user_set
+    common_user_dict = dict()
+    user_count = 0
+    for user in common_users:
+        common_user_dict[user] = user_count
+        user_count += 1
+    return common_user_dict
+
+
 def extract_common_users(file_path_list=get_default_file_path_list()):
     common_users = set()
     first_dict_flag = True
