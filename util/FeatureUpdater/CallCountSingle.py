@@ -19,3 +19,8 @@ class CallCountSingle:
     @staticmethod
     def finish(dict_value):
         return dict_value
+
+    @staticmethod
+    def zero():
+        return 0
+

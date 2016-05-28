@@ -51,6 +51,11 @@ class CallCountDetailAggregative:
             result_dict[user] = np.array(user_feature_vector[:constants.DETAIL_VALUE_DIM])
         return result_dict
 
+    @staticmethod
+    def zero():
+        empty_dict = dict()
+        return empty_dict
+
 
 def combine_feature_vectors(feature_vector1, feature_vector2):
     result_feature = dict(feature_vector1)

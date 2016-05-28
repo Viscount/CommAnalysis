@@ -35,3 +35,7 @@ class CallCountDetail:
             user_feature_vector.append(0)
         user_feature_vector.sort(reverse=True)
         return np.array(user_feature_vector[:constants.DETAIL_VALUE_DIM])
+
+    @staticmethod
+    def zero():
+        return np.zeros(constants.DETAIL_VALUE_DIM)

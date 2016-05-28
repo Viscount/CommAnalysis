@@ -8,7 +8,7 @@ import random
 __author__ = 'Liao Zhenyu'
 
 
-def extract_all_users(file_path):
+def extract_all_users(file_path=Dataloader.get_data_file_path()):
     records = Dataloader.read_record_from_file(file_path)
     calling_user_dict = dict()
     calling_user_count = 0

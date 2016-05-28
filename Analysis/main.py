@@ -3,10 +3,8 @@
 
 import logging
 import os
-import math
 import numpy as np
 from util import constants, Dataloader, FeatureUtil, FileUtil, DataUtil
-from scipy.stats.stats import pearsonr
 
 
 __author__ = 'Liao Zhenyu'
@@ -55,9 +53,7 @@ def single_value_analysis(user_set):
             for user_comp in user_set:
                 user_comp_index = user_set[user_comp]
                 user_comp_feature_vector = cmatrix[user_comp_index, start_index:day_index+1]
-                r, p_value = pearsonr(user_feature_vector, user_comp_feature_vector)
-                if math.isnan(r):
-                    r = 0.0
+                r = FeatureUtil.pearsonr_sim(user_feature_vector, user_comp_feature_vector)
                 sim_matrix[user_index, user_comp_index] = abs(r)
                 sim_matrix[user_comp_index, user_index] = abs(r)
         dump_matrix(matrix_index, sim_matrix)
@@ -82,9 +78,7 @@ def detail_value_analysis(user_set):
             for user_comp in user_set:
                 user_comp_index = user_set[user_comp]
                 user_comp_feature_vector = all_features[user_comp]
-                r, p_value = pearsonr(user_feature_vector, user_comp_feature_vector)
-                if math.isnan(r):
-                    r = 0.0
+                r = FeatureUtil.pearsonr_sim(user_feature_vector, user_comp_feature_vector)
                 sim_matrix[user_index, user_comp_index] = abs(r)
                 sim_matrix[user_comp_index, user_index] = abs(r)
         dump_matrix(day_index, sim_matrix)
@@ -113,9 +107,7 @@ def detail_value_analysis_aggregative(user_set):
                 for user_comp in user_set:
                     user_comp_index = user_set[user_comp]
                     user_comp_feature_vector = all_features[user_comp]
-                    r, p_value = pearsonr(user_feature_vector, user_comp_feature_vector)
-                    if math.isnan(r):
-                        r = 0.0
+                    r = FeatureUtil.pearsonr_sim(user_feature_vector, user_comp_feature_vector)
                     sim_matrix[user_index, user_comp_index] = abs(r)
                     sim_matrix[user_comp_index, user_index] = abs(r)
             dump_matrix(day_index-2, sim_matrix)
@@ -125,9 +117,9 @@ def detail_value_analysis_aggregative(user_set):
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # single-value analysis process
-    user_set = DataUtil.extract_user_selective(DataUtil.extract_common_users(), constants.SELECTIVE_NUM)
-    # single_value_analysis(user_set)
+    user_set = DataUtil.extract_user_selective(DataUtil.extract_all_users(), constants.SELECTIVE_NUM)
+    single_value_analysis(user_set)
     # detail-value analysis process
     # detail_value_analysis(user_set)
     # detail_value_aggregative_analysis process
-    detail_value_analysis_aggregative(user_set)
+    # detail_value_analysis_aggregative(user_set)
